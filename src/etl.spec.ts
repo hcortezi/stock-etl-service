@@ -15,6 +15,7 @@ describe("ETL process", () => {
 
     // Verifica os dados transformados no banco de dados analítico
     analyticalDB.all("SELECT * FROM transformed_orders", [], (err, rows) => {
+      if (err) throw err;
       expect(rows.length).toBeGreaterThan(0);
     });
   });
