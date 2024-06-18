@@ -5,7 +5,7 @@ import ordersRouter from "./routers/orders-router";
 import accountsRouter from "./routers/accounts-router";
 import etlRouter from "./routers/etl-router";
 
-const PORT = process.env.PORT || 4000;  // Use environment variable for port if available
+const PORT = process.env.PORT || 4000;  
 const HOSTNAME = "http://localhost";
 
 const app = express();
@@ -31,7 +31,7 @@ const server = app.listen(PORT, () => {
 
 const gracefulShutdown = () => {
   server.close(() => {
-    console.log("Server closed.");
+    console.log("Server fechado.");
     process.exit(0);
   });
 };
