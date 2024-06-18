@@ -1,4 +1,5 @@
 import supertest from "supertest";
+process.env.PORT = '5000'; 
 import { app, server } from "./index";
 
 describe("server", () => {

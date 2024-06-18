@@ -9,23 +9,28 @@ import TransformedOrder from "./models/TransformedOrder";
 
 const etlProcess = () => {
   ordersRepository.getAll((orders: Order[]) => {
+    if (!orders || orders.length === 0) {
+      console.log("No orders found.");
+      return;
+    }
+
     orders.forEach((order: Order) => {
       accountsRepository.getById(order.accountId, (account: Account | undefined) => {
         if (!account) {
-          console.error(`Conta com id ${order.accountId} não encontrada em order ${order.id}`);
+          console.error(`Account with id ${order.accountId} not found for order ${order.id}`);
           return;
         }
 
         stocksRepository.getById(order.stockId, (stock: Stock | undefined) => {
           if (!stock) {
-            console.error(`Stock com id ${order.stockId} não encontrada em order ${order.id}`);
+            console.error(`Stock with id ${order.stockId} not found for order ${order.id}`);
             return;
           }
 
           const transformedOrder: TransformedOrder = {
             orderId: order.id ?? -1, 
-            accountName: account ? account.name : 'Unknown', 
-            stockSymbol: stock ? stock.symbol : 'Unknown', 
+            accountName: account.name, 
+            stockSymbol: stock.symbol, 
             orderType: order.type,
             quantity: order.quantity,
             status: order.status
@@ -33,9 +38,9 @@ const etlProcess = () => {
 
           transformedOrdersRepository.addNew(transformedOrder, (id?: number) => {
             if (id) {
-              console.log(`Ordem transformada ${order.id} adicionada com sucesso. ID: ${id}`);
+              console.log(`Transformed order ${order.id} added successfully. ID: ${id}`);
             } else {
-              console.error(`Falha ao adicionar ordem transformada ${order.id}.`);
+              console.error(`Failed to add transformed order ${order.id}.`);
             }
           });
         });
